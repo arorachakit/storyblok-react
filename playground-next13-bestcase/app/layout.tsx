@@ -1,21 +1,10 @@
 import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
 import StoryblokProvider from "../components/StoryblokProvider";
 
-import { headers } from 'next/headers';
-
-
-
-
+import { headers } from "next/headers";
 
 import Page from "../components/Page";
 import Teaser from "../components/Teaser";
-
-
-
-
-
-
-
 
 export const metadata = {
   title: "Create Next App",
@@ -26,41 +15,39 @@ interface RootLayoutType {
 }
 
 export default function RootLayout({ children }: RootLayoutType) {
-
   const headersList = headers();
-  const header_url = headersList.get('x-url') // Coming from the middleware
+  const header_url = headersList.get("x-url"); // Coming from the middleware
 
-  if(header_url.includes('_storyblok_tk')){ // If inside the Visual Editor
+  if (header_url.includes("_storyblok_tk")) {
+    // If inside the Visual Editor
     storyblokInit({
       accessToken: "ExrmykhjqnuEWjKBR4Nt1Att", // using preview token
-      use: [apiPlugin]
-    }
-    )
-    return ( // using Storyblok Provider
+      use: [apiPlugin],
+    });
+    return (
+      // using Storyblok Provider
       <StoryblokProvider>
         <html lang="en">
           <body>{children}</body>
         </html>
       </StoryblokProvider>
-    )
-  } else { // if not inside Visual Editor / On Prod
+    );
+  } else {
+    // if not inside Visual Editor / On Prod
     storyblokInit({
-      accessToken: "yP1FPV25iTlL8TazUnsKPwtt", // Using public token 
+      accessToken: "yP1FPV25iTlL8TazUnsKPwtt", // Using public token
       use: [apiPlugin],
       components: {
         teaser: Teaser,
         page: Page,
       },
-      bridge: false // not initalizing the bridge
+      bridge: false, // not initalizing the bridge
     });
     return (
       <html lang="en">
         <body>{children}</body>
         {/* Not using Bridge loader */}
       </html>
-    )
+    );
   }
-
-  
-
 }
